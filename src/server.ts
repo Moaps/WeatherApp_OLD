@@ -3,7 +3,6 @@ import routes from './routes';
 
 const app = express();
 
-// Middleware para o parser de JSON
 app.use(express.json());
 
 // Rotas da aplicação
