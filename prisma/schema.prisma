@@ -1,7 +1,11 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:unitau123@164.92.111.91:5432/weatherapp"
 }
+
+generator client {
+    provider = "prisma-client-js"
+  }
 
 model avaliacao {
   id_avaliacao       Int       @id @default(autoincrement())
