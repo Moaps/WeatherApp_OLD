@@ -2,29 +2,39 @@ import { Request, Response } from "express";
 import { prisma } from "../database/primsaClient";
 
 class UsuarioController {
-    async criarUsuario(request: Request, response: Response) {
-        try {
-            const { nome, login, email, senha, local_assoc } = request.body;
+    async criarUsuario(req: Request, res: Response){
+        await conectar();
+        try{
+            const{nome, login, email, senha, local_assoc} = req.body;
 
-            // Validação dos dados 
-            if (!nome || !login || !email || !senha) {
-                return response.status(400).json({ message: "Todos os campos são obrigatórios" });
+            //Validação dos Dados
+            if(!nome || !login || !email || !senha){
+                return res.status(400).json({message: "Todos os campos são obrigatórios!"});
             }
 
             // Verificar se o usuário já existe pelo login ou email
             const usuarioExistente = await prisma.usuario.findFirst({ where: { OR: [{ login }, { email }] } });
             if (usuarioExistente) {
-                return response.status(400).json({ message: "Usuário já existe" });
+                return res.status(400).json({ message: "Usuário já existe!" });
             }
 
             // Criar o novo usuário
-            const novoUsuario = await prisma.usuario.create({ data: { nome, login, email, senha, local_assoc } });
-
-            return response.status(201).json({ message: "Usuário criado com sucesso", usuario: novoUsuario });
-        } catch (error) { 
-            return response.status(500).json({ message: "Erro ao criar usuário", error: error });
+            const novoUsuario = await prisma.usuario.create({
+                data:{
+                    nome,
+                    login,
+                    email,
+                    senha,
+                    local_assoc
+                }
+            });
+            await desconectar();
+            return res.status(201).json({ message: "Usuário criado com sucesso", usuario: novoUsuario });
+        } catch(error){
+            await desconectar();
+            return res.status(500).json({ message: "Erro ao criar usuário", error: error });
         }
-    }
+    };
 
     async login(request: Request, response:Response){
         try {
