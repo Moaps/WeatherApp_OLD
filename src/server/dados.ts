@@ -1,22 +1,20 @@
 import {conectarBanco, encerrarConexao, getUsuario} from './banco';
 
 class DadosAPI{
-    idUsuario: number;
     readonly url: string;
     readonly key: string;
 
-    constructor(idUsuario: number){
-        this.idUsuario = idUsuario;
+    constructor(){
         this.key = "3a0d1a4a72d54c0bb3804412242103";
         this.url = "http://api.weatherapi.com/v1";
     }
 
-    async localUsuario(): Promise<string>{
+    async localUsuario(idUsuario: number): Promise<string>{
         await conectarBanco();
         const usuario = await getUsuario();
 
         for(var u of usuario){
-            if(u['id_usuario']===this.idUsuario){
+            if(u['id_usuario']===idUsuario){
                 await encerrarConexao();
                 return u['local_assoc'];
             }
@@ -25,8 +23,8 @@ class DadosAPI{
         return "Usuário não encontrado"
     }
 
-    async inserirDadosClimaAtual(){
-        let local = await this.localUsuario();
+    async inserirDadosClimaAtual(idUsuario: number){
+        let local = await this.localUsuario(idUsuario);
         let conexao = await conectarBanco();
 
         if(local==="Usuário não encontrado"){
@@ -45,6 +43,8 @@ class DadosAPI{
 
                 const temperatura = dados['current']['temp_c'];
                 const precipitacao = dados['current']['precip_mm'];
+                let data_log: Date = new Date(dados['location']['localtime']);
+                data_log.setHours(data_log.getHours() - 3);
                 const local_assoc = local;
                 const condicao_climatica = dados['current']['condition']['text'];
                 const vento_max = dados['current']['wind_kph'];
@@ -52,14 +52,14 @@ class DadosAPI{
                 const sensacao_termica = dados['current']['feelslike_c'];
 
                 const query = `
-                    INSERT INTO clima (temperatura, precipitacao, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 `;
 
-                await conexao.query(query, [temperatura, precipitacao, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica]);
-
+                await conexao.query(query, [temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica]);
+                console.log("Dados adicionados com successo.");
             }catch(error) {
-                console.error('Erro', error);
+                console.error('Erro ao adicionar dados!', error);
                 await encerrarConexao();
                 throw error;
             }
@@ -68,8 +68,8 @@ class DadosAPI{
     }
 
     //formato data: "AAAA-MM-DD"
-    async inserirDadosPrevisao(dia: string){
-        let local = await this.localUsuario();
+    async inserirDadosPrevisao(dia: string, idUsuario: number){
+        let local = await this.localUsuario(idUsuario);
         let conexao = await conectarBanco();
 
         if(local==="Usuário não encontrado"){
@@ -79,21 +79,16 @@ class DadosAPI{
             const data = new Date(dia);
             const hoje = new Date();
             let data2 = new Date(hoje);
-            let data3 = new Date(hoje);
 
             data2.setDate(hoje.getDate() + 14);
-            data3.setDate(hoje.getDate() + 300);
 
             let  site: string;
 
             if(data<data2){
                 site = this.url + "/forecast.json?key=" + this.key + '&q=' + local + '&days=1&dt=' + dia + '&lang=pt';
             }
-            else if(data<=data3){
-                site = this.url + "/future.json?key=" + this.key + '&q=' + local + '&dt=' + dia + '&lang=pt';
-            }
             else{
-                console.log(`\nData muito distante, escolha um dia entre "${hoje}" e "${data3}\n"`)
+                console.log(`\nData muito distante, escolha um dia entre "${hoje}" e "${data2}\n"`)
                 await encerrarConexao();
                 return;
             }
@@ -112,9 +107,9 @@ class DadosAPI{
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 `;
                 await conexao.query(query, [dados['maxtemp_c'], dados['mintemp_c'], dados['avgtemp_c'], dados['condition']['text'], dados['maxwind_kph'], dados['totalprecip_mm'], dados['daily_chance_of_rain'], data, local, dados['avghumidity']]);
-
+                console.log("Dados adicionados com successo.");
             }catch(error) {
-                console.error('Erro', error);
+                console.error('Erro ao adicionar dados!', error);
                 await encerrarConexao();
                 throw error;
             }
@@ -123,8 +118,8 @@ class DadosAPI{
     }
 
     //formato data: "AAAA-MM-DD"
-    async inserirDadosPassado(dia: string){
-        let local = await this.localUsuario();
+    async inserirDadosPassado(dia: string, idUsuario: number){
+        let local = await this.localUsuario(idUsuario);
         let conexao = await conectarBanco();
 
         if(local==="Usuário não encontrado"){
@@ -149,9 +144,9 @@ class DadosAPI{
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 `;
                 await conexao.query(query, [dados['maxtemp_c'], dados['mintemp_c'], dados['avgtemp_c'], dados['condition']['text'], dados['maxwind_kph'], dados['totalprecip_mm'], dados['daily_chance_of_rain'], data, local, dados['avghumidity']]);
-
+                console.log("Dados adicionados com successo.");
             }catch(error) {
-                console.error('Erro', error);
+                console.error('Erro ao adicionar dados!', error);
                 await encerrarConexao();
                 throw error;
             }
@@ -160,3 +155,4 @@ class DadosAPI{
     }
 
 }
+export default new DadosAPI
