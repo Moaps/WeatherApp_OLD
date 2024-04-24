@@ -6,16 +6,15 @@ let conexao: Client;
 
 export async function conectarBanco(): Promise<Client>{
     const connectionOptions = {
-        host: process.env.HOST,
-        port: Number(process.env.PORT),
-        database: process.env.DATABASE,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
+        host: '164.92.111.91',
+        port: 5432,
+        database: 'weatherapp',
+        user: 'postgres',
+        password: 'unitau123'
     };
 
     try {
         conexao = await connect(connectionOptions);
-        console.log('Conectado ao Banco de Dados');
     } catch (error) {
         console.error('\nErro na conexão com o Banco:', error);
     }
@@ -26,7 +25,6 @@ export async function encerrarConexao(){
     if (conexao) {
         try {
             await conexao.end();
-            console.log('\nConexão com o Banco encerrada');
         } catch (error) {
             console.error('\nErro ao encerrar conexão com o Banco:', error);
         }
