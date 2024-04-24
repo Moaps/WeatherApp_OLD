@@ -1,11 +1,12 @@
 import UsuarioController from "./controllers/UsuarioController"
+import DadosAPI from "./server/dados";
 import * as express from 'express';
 
 const Request = {
     body: {
-        nome: "Anderson",
-        login: "ander",
-        email: "anderson_m_a_@hotmail.com",
+        nome: "Nome",
+        login: "login",
+        email: "nome@email.com",
         senha: "1234",
         local_assoc: "Taubaté"
     }
@@ -21,4 +22,6 @@ const Response = {
     },
   } as unknown as express.Response
 
-UsuarioController.criarUsuario(Request, Response);
+//UsuarioController.criarUsuario(Request, Response);
+//DadosAPI.inserirDadosClimaAtual(4);
+//DadosAPI.inserirDadosPrevisao('2024-04-28', 4);
