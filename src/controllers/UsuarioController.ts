@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../database/primsaClient";
+import {conectar, desconectar} from "../server";
 
 class UsuarioController {
     async criarUsuario(req: Request, res: Response){
@@ -9,12 +10,14 @@ class UsuarioController {
 
             //Validação dos Dados
             if(!nome || !login || !email || !senha){
+                await desconectar();
                 return res.status(400).json({message: "Todos os campos são obrigatórios!"});
             }
 
             // Verificar se o usuário já existe pelo login ou email
             const usuarioExistente = await prisma.usuario.findFirst({ where: { OR: [{ login }, { email }] } });
             if (usuarioExistente) {
+                await desconectar();
                 return res.status(400).json({ message: "Usuário já existe!" });
             }
 
