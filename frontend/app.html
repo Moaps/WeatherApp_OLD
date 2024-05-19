@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://kit.fontawesome.com/85d106b0c7.js" crossorigin="anonymous"></script>
         <script type="text/javascript" src="../assets/DHTMLX8/codebase/suite.js"></script>
         <link rel="stylesheet" href="../assets/DHTMLX8/codebase/suite.css">
         <link rel="stylesheet" href="../css/style.css">
@@ -287,19 +288,19 @@
 
         const template = ({ dia, photo, chuva, min_temp, max_temp, mail }) => (`
             <div class="dhx_dataview_template_d">
-                <div class="dhx_dataview_template_d__inside">
-                    <div class="dhx_dataview_template_d__picture"><img src='${photo}' style='width: 120px; float: left; margin-right: 12px;'></div>
+                <div class="dhx_dataview_template_d__inside" style="font-size: 15px">
+                    <div class="dhx_dataview_template_d__picture"><img src='${photo}' style='width: 90px; float: left; margin-right: 12px;'></div>
                     <div class="dhx_dataview_template_d__body">
-                        <span class="dhx_dataview_template_d__title">${dia}</span>
+                        <span class="dhx_dataview_template_d__title"><strong>${dia}</strong></span>
                         <div class="dhx_dataview_template_d__row">
                             <span class="dhx_dataview_template_d__text">${chuva}</span>
                         </div>
                         <div class="dhx_dataview_template_d__row">
-                            <span class="dhx_dataview_template_d__icon mdi mdi-cellphone-android"></span>
+                            <span class="dhx_dataview_template_d__icon"><i class="fa-solid fa-temperature-low"></i></span>
                             <span class="dhx_dataview_template_d__text">${min_temp}</span>
                         </div>
                         <div class="dhx_dataview_template_d__row">
-                            <span class="dhx_dataview_template_d__icon mdi mdi-cake-variant"></span>
+                            <span class="dhx_dataview_template_d__icon"><i class="fa-solid fa-temperature-high"></i></span>
                             <span class="dhx_dataview_template_d__text">${max_temp}</span>
                         </div>
                     </div>
@@ -311,41 +312,41 @@
             {
                 id: "dia_1",
                 dia: "01/05/2024",
-                chuva: "Chuva: 9%",
-                min_temp: "Min: 21°C",
-                max_temp: "Máx: 31°C",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
                 photo: "../assets/imgs/cloud-sun.svg"
             },
             {
                 id: "dia_2",
                 dia: "02/05/2024",
-                chuva: "Chuva: 9%",
-                min_temp: "Min: 21°C",
-                max_temp: "Máx: 31°C",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
                 photo: "../assets/imgs/cloud-sun.svg"
             },
             {
                 id: "dia_3",
                 dia: "03/05/2024",
-                chuva: "Chuva: 9%",
-                min_temp: "Min: 21°C",
-                max_temp: "Máx: 31°C",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
                 photo: "../assets/imgs/cloud-sun.svg"
             },
             {
                 id: "dia_4",
                 dia: "04/05/2024",
-                chuva: "Chuva: 9%",
-                min_temp: "Min: 21°C",
-                max_temp: "Máx: 31°C",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
                 photo: "../assets/imgs/cloud-sun.svg"
             },
             {
                 id: "dia_5",
                 dia: "05/05/2024",
-                chuva: "Chuva: 9%",
-                min_temp: "Min: 21°C",
-                max_temp: "Máx: 31°C",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
                 photo: "../assets/imgs/cloud-sun.svg"
             }
         ];
@@ -353,7 +354,6 @@
             itemsInRow: 5,
             gap: 10,
             template,
-            dragMode: "both",
             data: diasSemana
         });
         
