@@ -53,15 +53,14 @@ var conexao;
 function conectarBanco() {
   return __async(this, null, function* () {
     const connectionOptions = {
-      host: process.env.HOST,
-      port: Number(process.env.PORT),
-      database: process.env.DATABASE,
-      user: process.env.USER,
-      password: process.env.PASSWORD
+      host: "164.92.111.91",
+      port: 5432,
+      database: "weatherapp",
+      user: "postgres",
+      password: "unitau123"
     };
     try {
       conexao = yield (0, import_ts_postgres.connect)(connectionOptions);
-      console.log("Conectado ao Banco de Dados");
     } catch (error) {
       console.error("\nErro na conex\xE3o com o Banco:", error);
     }
@@ -73,7 +72,6 @@ function encerrarConexao() {
     if (conexao) {
       try {
         yield conexao.end();
-        console.log("\nConex\xE3o com o Banco encerrada");
       } catch (error) {
         console.error("\nErro ao encerrar conex\xE3o com o Banco:", error);
       }
