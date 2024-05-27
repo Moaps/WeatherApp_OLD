@@ -1,242 +1,613 @@
 "use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
 };
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var __async = (__this, __arguments, generator) => {
-  return new Promise((resolve, reject) => {
-    var fulfilled = (value) => {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
+Object.defineProperty(exports, "__esModule", { value: true });
+var banco_1 = require("./banco");
+var DadosAPI = /** @class */ (function () {
+    function DadosAPI() {
+        this.key = "3a0d1a4a72d54c0bb3804412242103";
+        this.url = "http://api.weatherapi.com/v1";
+    }
+    DadosAPI.prototype.localUsuario = function (idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var usuario, _i, usuario_1, u;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, (0, banco_1.getUsuario)()];
+                    case 2:
+                        usuario = _a.sent();
+                        _i = 0, usuario_1 = usuario;
+                        _a.label = 3;
+                    case 3:
+                        if (!(_i < usuario_1.length)) return [3 /*break*/, 6];
+                        u = usuario_1[_i];
+                        if (!(u['id_usuario'] === idUsuario)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 4:
+                        _a.sent();
+                        return [2 /*return*/, u['local_assoc']];
+                    case 5:
+                        _i++;
+                        return [3 /*break*/, 3];
+                    case 6: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 7:
+                        _a.sent();
+                        return [2 /*return*/, "Usuário não encontrado"];
+                }
+            });
+        });
     };
-    var rejected = (value) => {
-      try {
-        step(generator.throw(value));
-      } catch (e) {
-        reject(e);
-      }
+    DadosAPI.prototype.inserirDadosClimaAtual = function (idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, query, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 11];
+                    case 3:
+                        site = this.url + "/current.json?key=" + this.key + '&q=' + local + '&lang=pt';
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 10, , 11]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 5:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 7];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 6:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 7: return [4 /*yield*/, response.json()];
+                    case 8:
+                        dados = _a.sent();
+                        temperatura = dados['current']['temp_c'];
+                        precipitacao = dados['current']['precip_mm'];
+                        data_log = new Date(dados['location']['localtime']);
+                        data_log.setHours(data_log.getHours() - 3);
+                        local_assoc = local;
+                        condicao_climatica = dados['current']['condition']['text'];
+                        vento_max = dados['current']['wind_kph'];
+                        query = "\n                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max])];
+                    case 9:
+                        _a.sent();
+                        console.log("Dados adicionados com successo.");
+                        return [3 /*break*/, 11];
+                    case 10:
+                        error_1 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_1);
+                        throw error_1;
+                    case 11: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 12:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-    step((generator = generator.apply(__this, __arguments)).next());
-  });
-};
-
-// src/server/dados.ts
-var dados_exports = {};
-__export(dados_exports, {
-  default: () => dados_default
-});
-module.exports = __toCommonJS(dados_exports);
-
-// src/server/banco.ts
-var import_ts_postgres = require("ts-postgres");
-var import_dotenv = require("dotenv");
-(0, import_dotenv.config)();
-var conexao;
-function conectarBanco() {
-  return __async(this, null, function* () {
-    const connectionOptions = {
-      host: "164.92.111.91",
-      port: 5432,
-      database: "weatherapp",
-      user: "postgres",
-      password: "unitau123"
+    DadosAPI.prototype.inserirExibirDadosClimaAtual = function (idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, dia, temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, query, dataHora, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 11];
+                    case 3:
+                        site = this.url + "/current.json?key=" + this.key + '&q=' + local + '&lang=pt';
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 10, , 11]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 5:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 7];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 6:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 7: return [4 /*yield*/, response.json()];
+                    case 8:
+                        dados = _a.sent();
+                        dia = dados['location']['localtime'];
+                        temperatura = dados['current']['temp_c'];
+                        precipitacao = dados['current']['precip_mm'];
+                        data_log = new Date(dia);
+                        local_assoc = local;
+                        condicao_climatica = dados['current']['condition']['text'];
+                        vento_max = dados['current']['wind_kph'];
+                        query = "\n                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max])];
+                    case 9:
+                        _a.sent();
+                        dataHora = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4) + ' às ' + dia.slice(11, 16);
+                        console.log("\nClima de \"".concat(local, "\" no dia \"").concat(dataHora, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(condicao_climatica, "\"\nTemperatura: \"").concat(temperatura, "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(precipitacao, "\"mm\nVento: \"").concat(vento_max, "\"kmh\n"));
+                        return [3 /*break*/, 11];
+                    case 10:
+                        error_2 = _a.sent();
+                        console.error('Erro ao carregar dados!', error_2);
+                        throw error_2;
+                    case 11: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 12:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    try {
-      conexao = yield (0, import_ts_postgres.connect)(connectionOptions);
-    } catch (error) {
-      console.error("\nErro na conex\xE3o com o Banco:", error);
-    }
-    return conexao;
-  });
-}
-function encerrarConexao() {
-  return __async(this, null, function* () {
-    if (conexao) {
-      try {
-        yield conexao.end();
-      } catch (error) {
-        console.error("\nErro ao encerrar conex\xE3o com o Banco:", error);
-      }
-    }
-  });
-}
-function getUsuario() {
-  return __async(this, null, function* () {
-    if (!conexao) {
-      console.error("\nN\xE3o existe um Banco de Dados conectado");
-      return [];
-    }
-    try {
-      const query = `
-            SELECT id_usuario, local_assoc FROM usuario
-        `;
-      const result = yield conexao.query(query);
-      let linhas = [];
-      result.rows.forEach((row) => {
-        linhas.push({ id_usuario: row[0], local_assoc: row[1] });
-      });
-      return linhas;
-    } catch (error) {
-      console.error(`
-Erro ao pegar dados da tabela usuario:`, error);
-      throw error;
-    }
-  });
-}
-
-// src/server/dados.ts
-var DadosAPI = class {
-  constructor() {
-    this.key = "3a0d1a4a72d54c0bb3804412242103";
-    this.url = "http://api.weatherapi.com/v1";
-  }
-  localUsuario(idUsuario) {
-    return __async(this, null, function* () {
-      yield conectarBanco();
-      const usuario = yield getUsuario();
-      for (var u of usuario) {
-        if (u["id_usuario"] === idUsuario) {
-          yield encerrarConexao();
-          return u["local_assoc"];
-        }
-      }
-      yield encerrarConexao();
-      return "Usu\xE1rio n\xE3o encontrado";
-    });
-  }
-  inserirDadosClimaAtual(idUsuario) {
-    return __async(this, null, function* () {
-      let local = yield this.localUsuario(idUsuario);
-      let conexao2 = yield conectarBanco();
-      if (local === "Usu\xE1rio n\xE3o encontrado") {
-        console.log(local);
-      } else {
-        const site = this.url + "/current.json?key=" + this.key + "&q=" + local + "&lang=pt";
-        try {
-          const response = yield fetch(site);
-          if (!response.ok) {
-            yield encerrarConexao();
-            throw new Error("Deu ruim");
-          }
-          const dados = yield response.json();
-          const temperatura = dados["current"]["temp_c"];
-          const precipitacao = dados["current"]["precip_mm"];
-          let data_log = new Date(dados["location"]["localtime"]);
-          data_log.setHours(data_log.getHours() - 3);
-          const local_assoc = local;
-          const condicao_climatica = dados["current"]["condition"]["text"];
-          const vento_max = dados["current"]["wind_kph"];
-          const umidade = dados["current"]["humidity"];
-          const sensacao_termica = dados["current"]["feelslike_c"];
-          const query = `
-                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-                `;
-          yield conexao2.query(query, [temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, umidade, sensacao_termica]);
-          console.log("Dados adicionados com successo.");
-        } catch (error) {
-          console.error("Erro ao adicionar dados!", error);
-          yield encerrarConexao();
-          throw error;
-        }
-      }
-      yield encerrarConexao();
-    });
-  }
-  //formato data: "AAAA-MM-DD"
-  inserirDadosPrevisao(dia, idUsuario) {
-    return __async(this, null, function* () {
-      let local = yield this.localUsuario(idUsuario);
-      let conexao2 = yield conectarBanco();
-      if (local === "Usu\xE1rio n\xE3o encontrado") {
-        console.log(local);
-      } else {
-        const data = new Date(dia);
-        const hoje = /* @__PURE__ */ new Date();
-        let data2 = new Date(hoje);
-        data2.setDate(hoje.getDate() + 14);
-        let site;
-        if (data < data2) {
-          site = this.url + "/forecast.json?key=" + this.key + "&q=" + local + "&days=1&dt=" + dia + "&lang=pt";
-        } else {
-          console.log(`
-Data muito distante, escolha um dia entre "${hoje}" e "${data2}
-"`);
-          yield encerrarConexao();
-          return;
-        }
-        try {
-          const response = yield fetch(site);
-          if (!response.ok) {
-            yield encerrarConexao();
-            throw new Error("Deu ruim");
-          }
-          let dados = yield response.json();
-          dados = dados["forecast"]["forecastday"][0].day;
-          const query = `
-                    INSERT INTO previsao (temperatura_max, temperatura_min, temperatura_med, condicao_climatica, vento_max, precipitacao_max, probabilidade_chuva, data_log, local_assoc, umidade)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                `;
-          yield conexao2.query(query, [dados["maxtemp_c"], dados["mintemp_c"], dados["avgtemp_c"], dados["condition"]["text"], dados["maxwind_kph"], dados["totalprecip_mm"], dados["daily_chance_of_rain"], data, local, dados["avghumidity"]]);
-          console.log("Dados adicionados com successo.");
-        } catch (error) {
-          console.error("Erro ao adicionar dados!", error);
-          yield encerrarConexao();
-          throw error;
-        }
-      }
-      yield encerrarConexao();
-    });
-  }
-  //formato data: "AAAA-MM-DD"
-  inserirDadosPassado(dia, idUsuario) {
-    return __async(this, null, function* () {
-      let local = yield this.localUsuario(idUsuario);
-      let conexao2 = yield conectarBanco();
-      if (local === "Usu\xE1rio n\xE3o encontrado") {
-        console.log(local);
-      } else {
-        const site = this.url + "/history.json?key=" + this.key + "&q=" + local + "&dt=" + dia + "&lang=pt";
-        try {
-          const response = yield fetch(site);
-          if (!response.ok) {
-            yield encerrarConexao();
-            throw new Error("Deu ruim");
-          }
-          let dados = yield response.json();
-          const data = new Date(dia);
-          dados = dados["forecast"]["forecastday"][0].day;
-          const query = `
-                    INSERT INTO passado (temperatura_max, temperatura_min, temperatura_med, condicao_climatica, vento_max, precipitacao_max, probabilidade_chuva, data_log, local_assoc, umidade)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                `;
-          yield conexao2.query(query, [dados["maxtemp_c"], dados["mintemp_c"], dados["avgtemp_c"], dados["condition"]["text"], dados["maxwind_kph"], dados["totalprecip_mm"], dados["daily_chance_of_rain"], data, local, dados["avghumidity"]]);
-          console.log("Dados adicionados com successo.");
-        } catch (error) {
-          console.error("Erro ao adicionar dados!", error);
-          yield encerrarConexao();
-          throw error;
-        }
-      }
-      yield encerrarConexao();
-    });
-  }
-};
-var dados_default = new DadosAPI();
+    DadosAPI.prototype.inserirRetornarDadosClimaAtual = function (idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, dia, temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max, dataHora, str, query, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 4];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 3:
+                        _a.sent();
+                        console.log(local);
+                        return [2 /*return*/];
+                    case 4:
+                        site = this.url + "/current.json?key=" + this.key + '&q=' + local + '&lang=pt';
+                        _a.label = 5;
+                    case 5:
+                        _a.trys.push([5, 12, , 14]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 6:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 8];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 7:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 8: return [4 /*yield*/, response.json()];
+                    case 9:
+                        dados = _a.sent();
+                        dia = dados['location']['localtime'];
+                        temperatura = dados['current']['temp_c'];
+                        precipitacao = dados['current']['precip_mm'];
+                        data_log = new Date(dia);
+                        local_assoc = local;
+                        condicao_climatica = dados['current']['condition']['text'];
+                        vento_max = dados['current']['wind_kph'];
+                        dataHora = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4) + ' às ' + dia.slice(11, 16);
+                        str = "\nClima de \"".concat(local, "\" no dia \"").concat(dataHora, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(condicao_climatica, "\"\nTemperatura: \"").concat(temperatura, "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(precipitacao, "\"mm\nVento: \"").concat(vento_max, "\"kmh\n");
+                        query = "\n                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max])];
+                    case 10:
+                        _a.sent();
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 11:
+                        _a.sent();
+                        return [2 /*return*/, str];
+                    case 12:
+                        error_3 = _a.sent();
+                        console.error('Erro ao carregar dados!', error_3);
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 13:
+                        _a.sent();
+                        throw error_3;
+                    case 14: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirDadosPrevisao = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, data, hoje, data2, site, response, dados, data_col, query, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 13];
+                    case 3:
+                        data = new Date(dia);
+                        hoje = new Date();
+                        data2 = new Date(hoje);
+                        data2.setDate(hoje.getDate() + 14);
+                        site = void 0;
+                        if (!(data < data2)) return [3 /*break*/, 4];
+                        site = this.url + "/forecast.json?key=" + this.key + '&q=' + local + '&days=1&dt=' + dia + '&lang=pt';
+                        return [3 /*break*/, 6];
+                    case 4:
+                        console.log("\nData muito distante, escolha um dia entre \"".concat(hoje, "\" e \"").concat(data2, "\n\""));
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 5:
+                        _a.sent();
+                        return [2 /*return*/];
+                    case 6:
+                        _a.trys.push([6, 12, , 13]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 7:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 9];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 8:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 9: return [4 /*yield*/, response.json()];
+                    case 10:
+                        dados = _a.sent();
+                        dados = dados['forecast']['forecastday'][0].day;
+                        data_col = new Date(dados['location']['localtime']);
+                        data_col.setHours(data_col.getHours() - 3);
+                        query = "\n                    INSERT INTO previsao (temperatura_max, temperatura_min, temperatura_med, condicao_climatica, vento_max, precipitacao_max, data_log, local_assoc, data_col)\n                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['maxtemp_c'], dados['mintemp_c'], dados['avgtemp_c'], dados['condition']['text'], dados['maxwind_kph'], dados['totalprecip_mm'], data, local, data_col])];
+                    case 11:
+                        _a.sent();
+                        console.log("Dados adicionados com successo.");
+                        return [3 /*break*/, 13];
+                    case 12:
+                        error_4 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_4);
+                        throw error_4;
+                    case 13: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 14:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirExibirDadosPrevisao = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, data, hoje, data2, site, response, dados, data_col, query, data3, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 13];
+                    case 3:
+                        data = new Date(dia);
+                        hoje = new Date();
+                        data2 = new Date(hoje);
+                        data2.setDate(hoje.getDate() + 14);
+                        site = void 0;
+                        if (!(data < data2)) return [3 /*break*/, 4];
+                        site = this.url + "/forecast.json?key=" + this.key + '&q=' + local + '&days=1&dt=' + dia + '&lang=pt';
+                        return [3 /*break*/, 6];
+                    case 4:
+                        console.log("\nData muito distante, escolha um dia entre \"".concat(hoje, "\" e \"").concat(data2, "\n\""));
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 5:
+                        _a.sent();
+                        return [2 /*return*/];
+                    case 6:
+                        _a.trys.push([6, 12, , 13]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 7:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 9];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 8:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 9: return [4 /*yield*/, response.json()];
+                    case 10:
+                        dados = _a.sent();
+                        data_col = new Date(dados['location']['localtime']);
+                        dados = dados['forecast']['forecastday'][0].day;
+                        data_col.setHours(data_col.getHours() - 3);
+                        query = "\n                    INSERT INTO previsao (temperatura_max, temperatura_min, temperatura_med, condicao_climatica, vento_max, precipitacao_max, data_log, local_assoc, data_col)\n                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['maxtemp_c'], dados['mintemp_c'], dados['avgtemp_c'], dados['condition']['text'], dados['maxwind_kph'], dados['totalprecip_mm'], data, local, data_col])];
+                    case 11:
+                        _a.sent();
+                        data3 = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4);
+                        console.log("\nClima de \"".concat(local, "\" no dia \"").concat(data3, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(dados['condition']['text'], "\"\nTemperatura M\u00E1xima: \"").concat(dados['maxtemp_c'], "\"\u00BA\nTemperatura M\u00EDnima: \"").concat(dados['mintemp_c'], "\"\u00BA\nTemperatura M\u00E9dia: \"").concat(dados['avgtemp_c'], "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(dados['totalprecip_mm'], "\"mm\nVento: \"").concat(dados['maxwind_kph'], "\"kmh\n"));
+                        return [3 /*break*/, 13];
+                    case 12:
+                        error_5 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_5);
+                        throw error_5;
+                    case 13: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 14:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirRetornarDadosPrevisao = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, data, hoje, data2, site, response, dados, data_col, data3, str, query, error_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 4];
+                        console.log(local);
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                    case 4:
+                        data = new Date(dia);
+                        hoje = new Date();
+                        data2 = new Date(hoje);
+                        data2.setDate(hoje.getDate() + 14);
+                        site = void 0;
+                        if (!(data < data2)) return [3 /*break*/, 5];
+                        site = this.url + "/forecast.json?key=" + this.key + '&q=' + local + '&days=1&dt=' + dia + '&lang=pt';
+                        return [3 /*break*/, 7];
+                    case 5:
+                        console.log("\nData muito distante, escolha um dia entre \"".concat(hoje, "\" e \"").concat(data2, "\n\""));
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 6:
+                        _a.sent();
+                        return [2 /*return*/];
+                    case 7:
+                        _a.trys.push([7, 14, , 16]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 8:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 10];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 9:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 10: return [4 /*yield*/, response.json()];
+                    case 11:
+                        dados = _a.sent();
+                        data_col = new Date(dados['location']['localtime']);
+                        dados = dados['forecast']['forecastday'][0].day;
+                        data_col.setHours(data_col.getHours() - 3);
+                        data3 = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4);
+                        str = "\nClima de \"".concat(local, "\" no dia \"").concat(data3, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(dados['condition']['text'], "\"\nTemperatura M\u00E1xima: \"").concat(dados['maxtemp_c'], "\"\u00BA\nTemperatura M\u00EDnima: \"").concat(dados['mintemp_c'], "\"\u00BA\nTemperatura M\u00E9dia: \"").concat(dados['avgtemp_c'], "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(dados['totalprecip_mm'], "\"mm\nVento: \"").concat(dados['maxwind_kph'], "\"kmh\n");
+                        query = "\n                    INSERT INTO previsao (temperatura_max, temperatura_min, temperatura_med, condicao_climatica, vento_max, precipitacao_max, data_log, local_assoc, data_col)\n                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['maxtemp_c'], dados['mintemp_c'], dados['avgtemp_c'], dados['condition']['text'], dados['maxwind_kph'], dados['totalprecip_mm'], data, local, data_col])];
+                    case 12:
+                        _a.sent();
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 13:
+                        _a.sent();
+                        return [2 /*return*/, str];
+                    case 14:
+                        error_6 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_6);
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 15:
+                        _a.sent();
+                        throw error_6;
+                    case 16: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirDadosPassado = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, data, query, error_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 11];
+                    case 3:
+                        site = this.url + "/history.json?key=" + this.key + '&q=' + local + '&dt=' + dia + '&lang=pt';
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 10, , 11]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 5:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 7];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 6:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 7: return [4 /*yield*/, response.json()];
+                    case 8:
+                        dados = _a.sent();
+                        data = new Date(dia);
+                        dados = dados['forecast']['forecastday'][0].day;
+                        query = "\n                    INSERT INTO passado (temperatura_med, precipitacao_max, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['avgtemp_c'], dados['totalprecip_mm'], data, local, dados['condition']['text'], dados['maxwind_kph']])];
+                    case 9:
+                        _a.sent();
+                        console.log("Dados adicionados com successo.");
+                        return [3 /*break*/, 11];
+                    case 10:
+                        error_7 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_7);
+                        throw error_7;
+                    case 11: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 12:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirExibirDadosPassado = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, data, query, data2, error_8;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 3];
+                        console.log(local);
+                        return [3 /*break*/, 11];
+                    case 3:
+                        site = this.url + "/history.json?key=" + this.key + '&q=' + local + '&dt=' + dia + '&lang=pt';
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 10, , 11]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 5:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 7];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 6:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 7: return [4 /*yield*/, response.json()];
+                    case 8:
+                        dados = _a.sent();
+                        data = new Date(dia);
+                        dados = dados['forecast']['forecastday'][0].day;
+                        query = "\n                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['avgtemp_c'], dados['totalprecip_mm'], data, local, dados['condition']['text'], dados['maxwind_kph']])];
+                    case 9:
+                        _a.sent();
+                        data2 = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4);
+                        console.log("\nClima de \"".concat(local, "\" no dia \"").concat(data2, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(dados['condition']['text'], "\"\nTemperatura M\u00E9dia: \"").concat(dados['avgtemp_c'], "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(dados['totalprecip_mm'], "\"mm\nVento: \"").concat(dados['maxwind_kph'], "\"kmh\n"));
+                        return [3 /*break*/, 11];
+                    case 10:
+                        error_8 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_8);
+                        throw error_8;
+                    case 11: return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 12:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //formato data: "AAAA-MM-DD"
+    DadosAPI.prototype.inserirRetornarDadosPassado = function (dia, idUsuario) {
+        return __awaiter(this, void 0, void 0, function () {
+            var local, conexao, site, response, dados, data, data2, str, query, error_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.localUsuario(idUsuario)];
+                    case 1:
+                        local = _a.sent();
+                        return [4 /*yield*/, (0, banco_1.conectarBanco)()];
+                    case 2:
+                        conexao = _a.sent();
+                        if (!(local === "Usuário não encontrado")) return [3 /*break*/, 4];
+                        console.log(local);
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                    case 4:
+                        site = this.url + "/history.json?key=" + this.key + '&q=' + local + '&dt=' + dia + '&lang=pt';
+                        _a.label = 5;
+                    case 5:
+                        _a.trys.push([5, 12, , 14]);
+                        return [4 /*yield*/, fetch(site)];
+                    case 6:
+                        response = _a.sent();
+                        if (!!response.ok) return [3 /*break*/, 8];
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 7:
+                        _a.sent();
+                        throw new Error('Deu ruim');
+                    case 8: return [4 /*yield*/, response.json()];
+                    case 9:
+                        dados = _a.sent();
+                        data = new Date(dia);
+                        dados = dados['forecast']['forecastday'][0].day;
+                        data2 = dia.slice(8, 10) + '/' + dia.slice(5, 7) + '/' + dia.slice(0, 4);
+                        str = "\nClima de \"".concat(local, "\" no dia \"").concat(data2, "\":\n\nCondi\u00E7\u00E3o Clim\u00E1tica: \"").concat(dados['condition']['text'], "\"\nTemperatura M\u00E9dia: \"").concat(dados['avgtemp_c'], "\"\u00BA\nPrecipita\u00E7\u00E3o: \"").concat(dados['totalprecip_mm'], "\"mm\nVento: \"").concat(dados['maxwind_kph'], "\"kmh\n");
+                        query = "\n                    INSERT INTO clima (temperatura, precipitacao, data_log, local_assoc, condicao_climatica, vento_max)\n                    VALUES ($1, $2, $3, $4, $5, $6)\n                ";
+                        return [4 /*yield*/, conexao.query(query, [dados['avgtemp_c'], dados['totalprecip_mm'], data, local, dados['condition']['text'], dados['maxwind_kph']])];
+                    case 10:
+                        _a.sent();
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 11:
+                        _a.sent();
+                        return [2 /*return*/, str];
+                    case 12:
+                        error_9 = _a.sent();
+                        console.error('Erro ao adicionar dados!', error_9);
+                        return [4 /*yield*/, (0, banco_1.encerrarConexao)()];
+                    case 13:
+                        _a.sent();
+                        throw error_9;
+                    case 14: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return DadosAPI;
+}());
+exports.default = new DadosAPI;
