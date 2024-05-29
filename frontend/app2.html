@@ -1,0 +1,866 @@
+<link href="https://cdn.materialdesignicons.com/3.6.95/css/materialdesignicons.min.css?v=6.4.2" media="all" rel="stylesheet" type="text/css">
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <script src="https://kit.fontawesome.com/85d106b0c7.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../assets/DHTMLX8/codebase/suite.js"></script>
+    <link rel="stylesheet" href="../assets/DHTMLX8/codebase/suite.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width">
+    </head>
+<body>
+    <script>
+        let dados_clima = [];
+        let dados_previsao = [];
+
+        //const signWindowHTML = "<div style='display: flex; align-items: flex-end;'> <img style='width: 30px; height: 30px; margin-right: 10px' src='images/pastel_logo.svg'><span style='font-size: 20px; font-weight: bold'>WeatherApp</span></div>"
+        const signWindow = new dhx.Window({
+            width: 800,
+            height: 500,
+            closable: false
+        });
+
+        const signupForm = new dhx.Form(null, {
+            rows: [
+                {
+                    cols: [
+                        {
+                            width: 380,
+                            rows: [
+                                {
+                                    padding: "20px 0px 0px 20px",
+                                    label: "Nome",
+                                    placeholder: "Fulano",
+                                    type: "input",
+                                    name: "nome",
+                                    validation: function (value) {
+                                        return value && value.length >= 3;
+                                    },
+                                    errorMessage: "ERRO: Nome muito curto!",
+                                    successMessage: "Nome Válido",
+                                    preMessage: "Pelo menos 3 caracteres"
+                                },
+                                {
+                                    padding: "0px 0px 0px 20px",
+                                    label: "Email",
+                                    type: "input",
+                                    name: "email",
+                                    placeholder: "fulano@email.com",
+                                    errorMessage: "ERRO: Email Inválido!",
+                                    successMessage: "Email Válido",
+                                    validation: "email",
+                                    inputType: "email"
+                                },
+                                {
+                                    padding: "0px 0px 0px 20px",
+                                    label: "Usuário",
+                                    type: "input",
+                                    name: "usuario",
+                                    placeholder: "Fulaninho12",
+                                    validation: function (value) {
+                                        return value && value.length >= 0;
+                                    },
+                                    errorMessage: "ERRO: Escolha um nome de usuário!",
+                                    successMessage: "Usuário Válido"
+                                },
+                                {
+                                    padding: "0px 0px 0px 20px",
+                                    label: "Senha",
+                                    type: "input",
+                                    name: "pass",
+                                    inputType: "password",
+                                    helpMessage: "Requisitos mínimos para a Senha:<br><br>- 6 caracteres<br>- 1 letra maiúscula<br>- 1 letra minúscula<br>- 1 Símbolo<br>- 1 Número",
+                                    placeholder: "Senha123@",
+                                    validation: function (value) {
+                                        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,}$/;
+                                        return regex.test(value);
+                                    },
+                                    errorMessage: "ERRO: Senha inválida!",
+                                    successMessage: "Senha Válida"
+                                },
+                                {
+                                    align: "end",
+                                    cols: [
+                                        {
+                                            name: "loginSF",
+                                            type: "button",
+                                            size: "medium",
+                                            view: "flat",
+                                            circle: "true",
+                                            text: "Entrar",
+                                            color: "secondary"
+                                        },
+                                        {
+                                            name: "signupSF",
+                                            type: "button",
+                                            padding: "0px 0px 0px 10px",
+                                            size: "medium",
+                                            view: "flat",
+                                            circle: "true",
+                                            submit: true,
+                                            text: "Criar Conta"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: "container",
+                            html: `
+                            <div style='display: flex; justify-content: center; align-items: center; height: 100%;'>
+                                <img style='width: 300px; height: 300px; margin-left: 30px;' src='/images/planet-space.gif'>
+                            </div>
+                        `
+                        },
+                    ],
+                },
+            ],
+        })
+
+        const loginForm = new dhx.Form(null, {
+            rows: [
+                {
+                    type: "container"
+                },
+                {
+                    cols: [
+                        {
+                            width: 380,
+                            rows: [
+                                {
+                                    padding: "20px 0px 0px 20px",
+                                    label: "Usuário",
+                                    type: "input",
+                                    name: "usuario",
+                                    placeholder: "Fulaninho12"
+                                },
+                                {
+                                    padding: "0px 0px 0px 20px",
+                                    label: "Senha",
+                                    type: "input",
+                                    name: "pass",
+                                    inputType: "password",
+                                    placeholder: "Senha123@"
+                                },
+                                {
+                                    align: "end",
+                                    cols: [
+                                        {
+                                            name: "loginLf",
+                                            type: "button",
+                                            size: "medium",
+                                            view: "flat",
+                                            circle: "true",
+                                            submit: true,
+                                            text: "Entrar"
+                                        },
+                                        {
+                                            name: "signupLF",
+                                            type: "button",
+                                            size: "medium",
+                                            padding: "0px 0px 0px 10px",
+                                            view: "flat",
+                                            circle: "true",
+                                            text: "Criar Conta",
+                                            color: "secondary"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: "container",
+                            html: `
+                            <div style='display: flex; justify-content: center; align-items: center; height: 100%;'>
+                                <img style='width: 250px; height: 200px;' src='images/planet-space.gif'>
+                            </div>
+                        `
+                        },
+                    ],
+                },
+            ],
+        })
+
+        signWindow.attach(signupForm);
+        signWindow.show();
+
+        // Adicione um evento ao botão "Entrar" no signupForm
+        signupForm.getItem("loginSF").events.on("click", function () {
+            signWindow.attach(loginForm);
+            signWindow.setSize(800, 335)
+        });
+
+        // Adicione um evento ao botão "Criar Conta" no loginForm
+        loginForm.getItem("signupLF").events.on("click", function () {
+            signWindow.attach(signupForm);
+            signWindow.setSize(800, 500)
+        });
+
+        // Adicione um evento ao botão "Criar Conta" no loginForm
+        loginForm.getItem("loginLf").events.on("click", function () {
+            signWindow.hide();
+            mainWindow.show();
+            mainWindow.setFullScreen();
+        });
+
+        const mainWindowHTML = "<div style='display: flex; align-items: flex-end;'> <img style='width: 30px; height: 30px; margin-right: 10px' src='images/pastel_logo.svg'><span style='font-size: 20px; font-weight: bold'>WeatherApp</span></div>"
+        const mainWindow = new dhx.Window({
+            closable: false,
+            html: mainWindowHTML
+        });
+
+        const layout = new dhx.Layout("layout", {
+            type: "line",
+            css: "custom-layout-css",
+            cols: [
+                {
+                    id: "sidebar",
+                    header: "Olá, Fulaninho",
+                    width: "200px",
+                    headerHeight: 40,
+                    html: '<div style="padding: 10px;">Estação atual: <br /> <span><b>Taubaté, São Paulo (7185)</b></span></div><div style="padding: 10px;"><span><b>Últimos eventos</b></span><div style="text-wrap: wrap;">Chuva forte - há 15 min<br />Chuva forte imprevista relatada em Taubaté, São Paulo</div></div>',
+                    css: 'dhx_layout-cell-header__title'
+                },
+                {
+                    type: "line",
+                    rows: [
+                        {
+                            id: "toolbarBtns",
+                            height: 60,
+                            css: "layout-toolbar"
+                        },
+                        {
+                            id: "dias_semana"
+                        },
+                        {
+                            id: "grafico"
+                        }
+                    ]
+                }
+            ]
+        });
+
+        mainWindow.attach(layout);
+        
+        const toolbarButtons = [
+            {
+                type: "title",
+                value: "21/04/2024 a 27/04/2024",
+                html: "<span style='position: absolute;top:17px;font-size: 18px;'><strong>21/04/2024 a 27/04/2024</span></strong>"
+            },
+            {
+                type: "spacer",
+            },
+            {
+                id: "dados",
+                type: "button",
+                value: "Dados",
+                view: "flat",
+                size: "small",
+                circle: true,
+                color: "primary",
+            },
+            {
+                id: "rating",
+                type: "button",
+                value: "Avalie a previsão",
+                view: "flat",
+                icon: "dxi dxi-plus",
+                size: "small",
+                circle: true,
+                color: "primary",
+            },
+            {
+                id: "newEvent",
+                type: "button",
+                value: "Crie um novo evento",
+                view: "flat",
+                icon: "dxi dxi-plus",
+                size: "small",
+                circle: true,
+                color: "primary",
+            },
+        ];
+
+        const toolbar = new dhx.Toolbar(null);
+        toolbar.data.parse(toolbarButtons);
+        layout.getCell("toolbarBtns").attach(toolbar);
+
+        // Adicione um evento ao botão "Entrar" no signupForm
+        toolbar.events.on("click", function (id, e) {
+            if (id == 'rating') {
+                ratingWindow.show();
+                eventWindow.hide();
+                dadosWindow.hide();
+            } else if (id == 'dados') {
+                dadosWindow.show();
+                eventWindow.hide();
+                ratingWindow.hide();
+            } else {
+                eventWindow.show();
+                ratingWindow.hide();
+                dadosWindow.hide();
+            }
+        });
+
+        const template = ({ dia, photo, chuva, min_temp, max_temp, mail }) => (`
+            <div class="dhx_dataview_template_d">
+                <div class="dhx_dataview_template_d__inside" style="font-size: 15px">
+                    <div class="dhx_dataview_template_d__picture"><img src='${photo}' style='width: 90px; float: left; margin-right: 12px;'></div>
+                    <div class="dhx_dataview_template_d__body">
+                        <span class="dhx_dataview_template_d__title"><strong>${dia}</strong></span>
+                        <div class="dhx_dataview_template_d__row">
+                            <span class="dhx_dataview_template_d__text">${chuva}</span>
+                        </div>
+                        <div class="dhx_dataview_template_d__row">
+                            <span class="dhx_dataview_template_d__icon"><i class="fa-solid fa-temperature-low"></i></span>
+                            <span class="dhx_dataview_template_d__text">${min_temp}</span>
+                        </div>
+                        <div class="dhx_dataview_template_d__row">
+                            <span class="dhx_dataview_template_d__icon"><i class="fa-solid fa-temperature-high"></i></span>
+                            <span class="dhx_dataview_template_d__text">${max_temp}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        var diasSemana = [
+            {
+                id: "dia_1",
+                dia: "01/05/2024",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
+                photo: "../assets/imgs/cloud-sun.svg"
+            },
+            {
+                id: "dia_2",
+                dia: "02/05/2024",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
+                photo: "../assets/imgs/cloud-sun.svg"
+            },
+            {
+                id: "dia_3",
+                dia: "03/05/2024",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
+                photo: "../assets/imgs/cloud-sun.svg"
+            },
+            {
+                id: "dia_4",
+                dia: "04/05/2024",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
+                photo: "../assets/imgs/cloud-sun.svg"
+            },
+            {
+                id: "dia_5",
+                dia: "05/05/2024",
+                chuva: "Chuva: <strong>9%</strong>",
+                min_temp: "Min: <strong>21°C</strong>",
+                max_temp: "Máx: <strong>31°C</strong>",
+                photo: "../assets/imgs/cloud-sun.svg"
+            }
+        ];
+        const dataview = new dhx.DataView(null, {
+            itemsInRow: 5,
+            gap: 10,
+            template,
+            data: diasSemana
+        });
+        
+        layout.getCell("dias_semana").attach(dataview)
+        
+
+        const configChart = {
+                type: "line",
+                css: "dhx_widget--bg_white dhx_widget--bordered",
+                scales: {
+                    top: {
+                        size: 20
+                    },
+                    bottom: {
+                        text: "t",
+                        showText: false
+                    },
+                    left: {
+                        maxTicks: 10,
+                        max: 100,
+                        min: 0
+                    }
+                },
+                series: [
+                    {
+                        value: "value",
+                        color: "#5E83BA",
+                        strokeWidth: 5
+                    },
+                    {
+                        value: "value_2",
+                        color: "#FF7700",
+                        strokeWidth: 5
+                    }
+                ]
+        };
+
+        const chart = new dhx.Chart("chart", configChart);
+        chart.data.parse([
+            {
+                value: Math.random() * 100,
+                t: "u" + Date.now() + 1
+            },
+            {
+                value: Math.random() * 100,
+                t: "u" + Date.now() + 2
+            },
+            {
+                value: Math.random() * 100,
+                t: "u" + Date.now() + 3
+            },
+            {
+                value_2: Math.random() * 30,
+                t: "u" + Date.now() + 6
+            },
+            {
+                value_2: Math.random() * 50,
+                t: "u" + Date.now() + 9
+            },
+            {
+                value_2: Math.random() * 2,
+                t: "u" + Date.now() + 30
+            }
+        ]);
+
+        function add() {
+            chart.data.add({
+                value: Math.random() * 100,
+                t: "u" + Date.now()
+            });
+        }
+
+        layout.getCell("grafico").attach(chart)
+
+        // Cria uma nova instância do objeto Date para obter a data atual
+        const today = new Date();
+
+        // Formata a data no formato "dd/mm/yyyy"
+        const day = ("0" + today.getDate()).slice(-2); // Adiciona zero à esquerda, se necessário
+        const month = ("0" + (today.getMonth() + 1)).slice(-2); // Meses são de 0 a 11
+        const year = today.getFullYear();
+        const todayText = day + "/" + month + "/" + year;
+
+        /*
+            POPUP - DADOS
+        */
+        const dadosWindow = new dhx.Window({
+            width: 800,
+            height: 420,
+            title: "Dados",
+            modal: true
+        });
+
+        const dadosForm = new dhx.Form("form", {
+            padding: 0,
+            width: 800,
+            rows: [
+                {
+                    align: "end",
+                    name: "carregarClima",
+                    type: "button",
+                    submit: true,
+                    text: "Carregar Tabela clima",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                },
+                {
+                    align: "end",
+                    name: "carregarPrevisao",
+                    type: "button",
+                    submit: true,
+                    text: "Carregar Tabela previsao",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                },
+                {
+                    align: "end",
+                    name: "mostrarClima",
+                    type: "button",
+                    submit: true,
+                    text: "Mostrar Tabela clima",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                },
+                {
+                    align: "end",
+                    name: "mostrarPrevisao",
+                    type: "button",
+                    submit: true,
+                    text: "Mostrar Tabela previsao",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                }
+            ]
+        });
+
+        dadosWindow.attach(dadosForm);
+
+        dadosForm.getItem("carregarClima").events.on("click", function () {
+            fetch('http://localhost:3000/climas')
+            .then(response => response.json())
+            .then(data => {
+                dados_clima = data;
+                console.log('Dados da tabela clima carregados:', dados_clima);
+            })
+            .catch(error => console.error('Erro ao carregar dados do clima:', error));
+        });
+
+        dadosForm.getItem("carregarPrevisao").events.on("click", function () {
+            fetch('http://localhost:3000/previsoes')
+            .then(response => response.json())
+            .then(data => {
+                dados_previsao = data;
+                console.log('Dados da tabela previsão carregados:', dados_previsao);
+            })
+            .catch(error => console.error('Erro ao carregar dados da previsão:', error));
+        });
+
+        dadosForm.getItem("mostrarClima").events.on("click", function () {
+            const climaWindow = new dhx.Window({
+                width: 1080,
+                height: 720,
+                title: "Tabela clima",
+                modal: true
+            });
+
+            if (dados_clima.length === 0) {
+                climaWindow.attachHTML(`
+                    <div>
+                        <h2>Os dados não foram carregados.</h2>
+                    </div>
+                `);
+            } else {
+
+                let tabelaHTML = `
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black; padding: 8px;">Temperatura (ºC)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Precipitação (mm)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Data</th>
+                                <th style="border: 1px solid black; padding: 8px;">Hora</th>
+                                <th style="border: 1px solid black; padding: 8px;">Cidade</th>
+                                <th style="border: 1px solid black; padding: 8px;">Condição Climática</th>
+                                <th style="border: 1px solid black; padding: 8px;">Vento Máximo (km/h)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                const linhasTabela = dados_clima.map(clima => {
+                    let data_log = new Date(clima.data_log);
+                    let dia = String(data_log.getDate()).padStart(2, '0');
+                    let mes = String(data_log.getMonth() + 1).padStart(2, '0');
+                    let ano = data_log.getFullYear();
+                    let hora = data_log.toTimeString().slice(0, 5);
+                    let dataFormatada = `${dia}/${mes}/${ano}`;
+
+                    return `
+                        <tr>
+                            <td style="border: 1px solid black; padding: 8px;">${clima.temperatura}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${clima.precipitacao}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${dataFormatada}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${hora}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${clima.local_assoc}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${clima.condicao_climatica}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${clima.vento_max}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                tabelaHTML += linhasTabela;
+                tabelaHTML += `</tbody></table>`;
+                climaWindow.attachHTML(`
+                    <div>
+                        <h1> Tabela clima </h1>
+                        ${tabelaHTML}
+                    </div>
+                `);
+            }
+            climaWindow.show();
+        });
+
+        dadosForm.getItem("mostrarPrevisao").events.on("click", function () {
+            const prevWindow = new dhx.Window({
+                width: 1080,
+                height: 720,
+                title: "Tabela previsão",
+                modal: true
+            });
+
+            if (dados_previsao.length === 0) {
+                prevWindow.attachHTML(`
+                    <div>
+                        <h2>Os dados não foram carregados.</h2>
+                    </div>
+                `);
+            } else {
+                let tabelaHTML = `
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid black; padding: 8px;">Temperatura Máxima (ºC)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Temperatura Mínima (ºC)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Temperatura Média (ºC)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Condição Climática</th>
+                                <th style="border: 1px solid black; padding: 8px;">Vento Máximo (km/h)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Precipitação (mm)</th>
+                                <th style="border: 1px solid black; padding: 8px;">Data</th>
+                                <th style="border: 1px solid black; padding: 8px;">Cidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                const linhasTabela = dados_previsao.map(previsao => {
+                    let data_log = new Date(previsao.data_log);
+                    let dia = String(data_log.getDate()).padStart(2, '0');
+                    let mes = String(data_log.getMonth() + 1).padStart(2, '0');
+                    let ano = data_log.getFullYear();
+                    let dataFormatada = `${dia}/${mes}/${ano}`;
+
+                    return `
+                        <tr>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.temperatura_max}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.temperatura_min}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.temperatura_med}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.condicao_climatica}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.vento_max}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.precipitacao_max}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${dataFormatada}</td>
+                            <td style="border: 1px solid black; padding: 8px;">${previsao.local_assoc}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                tabelaHTML += linhasTabela;
+                tabelaHTML += `</tbody></table>`;
+                prevWindow.attachHTML(`
+                    <div>
+                        <h1> Tabela previsao </h1>
+                        ${tabelaHTML}
+                    </div>
+                `);
+            }
+            prevWindow.show();
+        });
+
+        /*
+            POPUP - EVENTO IMPREVISTO
+        */
+        // const windowHTML = "<p>Hoje, dd/mm/yy.</p><img style='display: block; width: 200px; height: 200px; margin-top: 20px; margin-left: auto; margin-right: auto' src='https://snippet.dhtmlx.com/codebase/data/common/img/01/developer-01.svg'>";
+        const eventWindow = new dhx.Window({
+            width: 800,
+            height: 327,
+            title: "Registrar evento imprevisto - " + todayText,
+            modal: true
+        });
+
+        const eventForm = new dhx.Form("form", {
+            padding: 0,
+            width: 800,
+            rows: [
+                {
+                    name: "selectEvent",
+                    type: "select",
+                    label: "Tipo de Evento",
+                    labelPosition: "top",
+                    labelWidth: 140,
+                    value: "0",
+                    required: true,
+                    validation: function (value) {
+                        return value !== "0";
+                    },
+                    errorMessage: "ERRO: Selecione um valor válido!",
+                    options: [
+                        {
+                            value: "0",
+                            content: ""
+                        },
+                        {
+                            value: "1",
+                            content: "Chuva"
+                        },
+                        {
+                            value: "2",
+                            content: "Chuva com Granizo"
+                        },
+                        {
+                            value: "3",
+                            content: "Tempestade"
+                        },
+                        {
+                            value: "4",
+                            content: "Tempestade de Neve"
+                        },
+                        {
+                            value: "5",
+                            content: "Tempestade com Granizo"
+                        },
+                        {
+                            value: "6",
+                            content: "Geada"
+                        },
+                        {
+                            value: "7",
+                            content: "Neve"
+                        },
+                        {
+                            value: "8",
+                            content: "Neblina Baixa"
+                        },
+                        {
+                            value: "9",
+                            content: "Ventania"
+                        },
+                        {
+                            value: "10",
+                            content: "Furacão ou Tufão"
+                        }
+                    ]
+                },
+                {
+                    name: "commentEvent",
+                    type: "textarea",
+                    label: "Comentário",
+                    required: false,
+                    labelWidth: 140,
+                    labelPosition: "top",
+                    height: "100px"
+                },
+                {
+                    align: "end",
+                    name: "salvarEvento",
+                    type: "button",
+                    submit: true,
+                    text: "Salvar",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                    icon: "dxi dxi-content-save"
+                }
+            ]
+        });
+        eventWindow.attach(eventForm);
+
+        /*
+            POPUP - Avaliação
+        */
+
+        const ratingWindow = new dhx.Window({
+            width: 800,
+            height: 420,
+            title: "Avalie a previsão - " + todayText,
+            modal: true
+        });
+
+        const ratingForm = new dhx.Form("form", {
+            padding: 0,
+            width: 800,
+            rows: [
+                {
+                    name: "selectTemperature",
+                    type: "select",
+                    label: "Temperatura",
+                    labelPosition: "top",
+                    labelWidth: 140,
+                    value: "0",
+                    required: true,
+                    validation: function (value) {
+                        return value !== "0";
+                    },
+                    errorMessage: "ERRO: Selecione um valor válido!",
+                    options: [
+                        {
+                            value: "0",
+                            content: ""
+                        },
+                        {
+                            value: "1",
+                            content: "Previsão Correta"
+                        },
+                        {
+                            value: "2",
+                            content: "Previsão Incorreta"
+                        }
+                    ]
+                },
+                {
+                    name: "selectPluviosity",
+                    type: "select",
+                    label: "Pluviosidade",
+                    labelPosition: "top",
+                    labelWidth: 140,
+                    value: "0",
+                    required: true,
+                    validation: function (value) {
+                        return value !== "0";
+                    },
+                    errorMessage: "ERRO: Selecione um valor válido!",
+                    options: [
+                        {
+                            value: "0",
+                            content: ""
+                        },
+                        {
+                            value: "1",
+                            content: "Previsão Correta"
+                        },
+                        {
+                            value: "2",
+                            content: "Previsão Incorreta"
+                        }
+                    ]
+                },
+                {
+                    name: "commentRating",
+                    type: "textarea",
+                    label: "Comentário",
+                    required: false,
+                    labelWidth: 140,
+                    labelPosition: "top",
+                    height: "100px"
+                },
+                {
+                    align: "end",
+                    name: "salvarEvento",
+                    type: "button",
+                    submit: true,
+                    text: "Salvar",
+                    size: "medium",
+                    view: "flat",
+                    circle: true,
+                    color: "secondary",
+                    icon: "dxi dxi-content-save"
+                }
+            ]
+        });
+        ratingWindow.attach(ratingForm);
+    </script>
+</body>
+</html>
